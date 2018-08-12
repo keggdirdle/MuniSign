@@ -1,0 +1,11 @@
+{
+    "extends": "airbnb",
+    "rules": {
+        "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
+        "class-methods-use-this": ["warn"]
+    },
+    "env": {
+        "browser": true,
+        "node": true                                                                    
+    }
+}

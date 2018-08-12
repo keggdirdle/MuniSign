@@ -1,0 +1,21 @@
+{
+    "agencyId": "sf-muni",
+    "location": {
+        "lat": "37.7755913",
+        "lng": "-122.4169554"
+    },
+    "domain": "http://webservices.nextbus.com/service/publicJSONFeed",
+    "googleAPIKey": "AIzaSyAh7BtUc6rMb3flhrDmvusoTWLnM48_MBY",
+    "cache": {
+        "routes": 2592000000,
+        "stops": 40
+    },
+    "favorites": [{
+        "route": "47",
+        "stop": "5545"
+    },
+    {
+        "route": "F",
+        "stop": "5652"
+    }]
+}
