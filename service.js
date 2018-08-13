@@ -43,7 +43,6 @@ getMutiplePredictionsForStopsAndRoutes = function(configModel) {
     for(let i=0; i<configModel.favorites.length;i++) {
         stops += `&stops=${configModel.favorites[i].route}|${configModel.favorites[i].stop}`
     }
-    //http://webservices.nextbus.com/service/publicJSONFeed?command=predictionsForMultiStops&a=sf-muni&stops=47|5545&stops=N|3909
     return Cache.get(`predictionsForMultiStops`, `${configModel.domain}?command=predictionsForMultiStops&a=${configModel.agencyId}${stops}`)
     .then(json => json.json())
     .then(json => {return json.predictions})
@@ -53,14 +52,14 @@ sendResponse = function(response) {
     response.end();
 }
 
-haveWeBeenHereRencently = function(url) {
-    fs.readdir(__dirname, (err, files) => {
-        files.forEach(file => {
-        console.log(file);
-        });
-    })
-    console.log(files)
-} 
+// haveWeBeenHereRencently = function(url) {
+//     fs.readdir(__dirname, (err, files) => {
+//         files.forEach(file => {
+//         console.log(file);
+//         });
+//     })
+//     console.log(files)
+// } 
 
 module.exports = {
     loadConfig: loadConfig,

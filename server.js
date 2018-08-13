@@ -3,14 +3,12 @@ const SignFunctions  = require("./service");
 const DisplayFunctions = require("./display");
 
 let configModel = {}
-let routeModel = {}
 let predicitonModel = {};
-let counter = 5
 
 let workflow = {
     doYourDoYourStuff: function() {
-        counter--;
-
+        DisplayFunctions.stopTimers();
+        DisplayFunctions.showTime();
         SignFunctions.loadConfig()
         .then(
             resp => {
@@ -22,14 +20,12 @@ let workflow = {
             predicitonModel = resp[1];
         })
         .then(() => {
-            DisplayFunctions.stopPredictions();
-            DisplayFunctions.showPredictions(predicitonModel);
+            DisplayFunctions.stopTimers();
+            DisplayFunctions.showPredictions(configModel, predicitonModel);
         })
         .catch((err) => console.log(err))
 
-        if (counter > 0) {
-            setTimeout(() => workflow.doYourDoYourStuff(), 1 * 60 * 1000);
-        }
+        setTimeout(() => workflow.doYourDoYourStuff(), 1 * 60 * 1000);
     }
 }
 

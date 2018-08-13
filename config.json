@@ -7,8 +7,8 @@
     "domain": "http://webservices.nextbus.com/service/publicJSONFeed",
     "googleAPIKey": "AIzaSyAh7BtUc6rMb3flhrDmvusoTWLnM48_MBY",
     "cache": {
-        "routes": 2592000000,
-        "stops": 40
+        "display": 5,
+        "data": 60
     },
     "favorites": [{
         "route": "47",
@@ -17,5 +17,21 @@
     {
         "route": "F",
         "stop": "5652"
+    },
+    {
+        "route": "76X",
+        "stop": "6833"
+    },
+    {
+        "route": "90",
+        "stop": "5545"
+    },
+    {
+        "route": "14R",
+        "stop": "5544"
+    },
+    {
+        "route": "N",
+        "stop": "5419"
     }]
 }
