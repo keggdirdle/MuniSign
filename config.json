@@ -5,9 +5,9 @@
         "lng": "-122.4169554"
     },
     "domain": "http://webservices.nextbus.com/service/publicJSONFeed",
-    "googleAPIKey": "AIzaSyAh7BtUc6rMb3flhrDmvusoTWLnM48_MBY",
+    "googleAPIKey": "{APIKey}}",
     "cache": {
-        "display": 5,
+        "display": 7,
         "data": 60
     },
     "favorites": [{
@@ -27,7 +27,7 @@
         "stop": "5545"
     },
     {
-        "route": "14R",
+        "route": "14",
         "stop": "5544"
     },
     {
