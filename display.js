@@ -9,11 +9,11 @@ let timeHandle;
 showPredictions = function(configModel, predictionModel, index=0) {
     let i = 0;
     let output = "";
-    if (predictionModel[index] && predictionModel[index].direction && predictionModel[index].direction.prediction[0]) {
+    if (predictionModel[index] && predictionModel[index].direction && predictionModel[index].direction.prediction && predictionModel[index].direction.prediction[0]) {
         output += `${predictionModel[index].routeTitle} ${predictionModel[index].stopTitle}\r\n${_isArriving(predictionModel[index].direction.prediction[0].minutes)}`
     }
-    if (predictionModel[index] && predictionModel[index].direction && predictionModel[index].direction.prediction[1]) {
-        output += ` & ${predictionModel[index].direction.prediction[1].minutes} minutes`
+    if (predictionModel[index] && predictionModel[index].direction && predictionModel[index].direction.prediction && predictionModel[index].direction.prediction[1]) {
+        output += ` & ${predictionModel[index].direction.prediction[1].minutes} min`
     }
     if (output !== "") {
         dataHandle = setTimeout(() => {   
@@ -27,7 +27,7 @@ showPredictions = function(configModel, predictionModel, index=0) {
             showPredictions(configModel,predictionModel, index);
             },10)
     }
-}
+} 
 
 showTime = function() {
     timeHandle = setTimeout(()=>{
@@ -40,10 +40,10 @@ showTime = function() {
 stopTimers = function() {
     clearTimeout(dataHandle);
     clearTimeout(timeHandle);
-}
+} 
 
 _isArriving = function(minutes) {
-    return minutes === "0" ? "Arriving" : `${minutes} minutes`
+    return minutes === "0" ? "Arriving" : `${minutes} min`
 }
 
 module.exports = {

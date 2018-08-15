@@ -23,12 +23,12 @@ let workflow = {
             DisplayFunctions.stopTimers();
             DisplayFunctions.showPredictions(configModel, predicitonModel);
         })
-        .catch((err) => console.log(err))
+        //.catch((err) => console.log(err))
 
         setTimeout(() => workflow.doYourDoYourStuff(), 1 * 60 * 1000);
     }
 }
-
+ 
 workflow.doYourDoYourStuff()
 
 onRequest = function(request, response) {

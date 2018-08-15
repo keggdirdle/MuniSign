@@ -5,9 +5,9 @@
         "lng": "-122.4169554"
     },
     "domain": "http://webservices.nextbus.com/service/publicJSONFeed",
-    "googleAPIKey": "{APIKey}}",
+    "googleAPIKey": "{APIKey}",
     "cache": {
-        "display": 7,
+        "display": 2,
         "data": 60
     },
     "favorites": [{

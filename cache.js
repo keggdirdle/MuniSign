@@ -4,8 +4,6 @@ const fs = require('fs');
 
     get = function(key, url, err) {
         return fetch(url)
-        //return set(key,url);
-        //return fetch(url);
     }
 
     set = function(key, url) {

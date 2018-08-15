@@ -47,7 +47,7 @@ getMutiplePredictionsForStopsAndRoutes = function(configModel) {
     .then(json => json.json())
     .then(json => {return json.predictions})
 }
-
+ 
 sendResponse = function(response) {
     response.end();
 }
