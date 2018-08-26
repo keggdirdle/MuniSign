@@ -7,16 +7,19 @@
     "domain": "http://webservices.nextbus.com/service/publicJSONFeed",
     "googleAPIKey": "{APIKey}",
     "cache": {
-        "display": 2,
+        "display": 5,
         "data": 60
     },
+    "debug": false,
     "favorites": [{
         "route": "47",
-        "stop": "5545"
+        "stop": "5545",
+        "stopTitle": "Mission St & 11th St"
     },
     {
         "route": "F",
-        "stop": "5652"
+        "stop": "5652",
+        "stopTitle": "Market St & 9th St - Inbound"
     },
     {
         "route": "76X",
@@ -32,6 +35,15 @@
     },
     {
         "route": "N",
-        "stop": "5419"
+        "stop": "5419",
+        "stopTitle": "Van Ness Station Inbound"
+    },
+    {
+        "route": "N_OWL",
+        "stop": "5696"
+    },{
+        "route": "21",
+        "stop": "5652",
+        "stopTitle": "Market St & 9th St"
     }]
 }

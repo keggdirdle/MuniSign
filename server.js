@@ -21,15 +21,18 @@ let workflow = {
         })
         .then(() => {
             DisplayFunctions.stopTimers();
-            DisplayFunctions.showPredictions(configModel, predicitonModel);
+            try {
+                DisplayFunctions.showPredictions(configModel, predicitonModel);
+            } catch(e) {
+                DisplayFunctions.showError(e);
+            }
         })
-        //.catch((err) => console.log(err))
 
         setTimeout(() => workflow.doYourDoYourStuff(), 1 * 60 * 1000);
     }
 }
  
-workflow.doYourDoYourStuff()
+workflow.doYourDoYourStuff();
 
 onRequest = function(request, response) {
 
@@ -41,7 +44,8 @@ onRequest = function(request, response) {
 
     response.writeHead(200, {"Content-Type": "text/plain"});
     response.write("Hello World");
-    workflow.doYourDoYourStuff(response);
+    response.end();
+    //workflow.doYourDoYourStuff(response);
     
     //all stops for all routes (takes a long time)
     //http://webservices.nextbus.com/service/publicXMLFeed?command=routeConfig&a=sf-muni
@@ -60,7 +64,7 @@ onRequest = function(request, response) {
     //https://developers.google.com/maps/documentation/distance-matrix/intro#DistanceMatrixRequests
     //https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=37.775632099999996,-122.4173286&destinations=37.77431%2C-122.4172899&key=AIzaSyAh7BtUc6rMb3flhrDmvusoTWLnM48_MBY
 } 
-http.createServer(onRequest).listen(8000);
+http.createServer(onRequest).listen(8001);
 
 
 //workflow
