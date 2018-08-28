@@ -1,4 +1,10 @@
 {
+    "loaded": true,
+    "debug": true,
+    "mockData": false,
+    "weather" : {
+        "url": "http://api.openweathermap.org/data/2.5/forecast?zip=94103,us&units=imperial&appid=612f4aa40986989c6b698bc2bf4a1b01"
+    },
     "agencyId": "sf-muni",
     "location": {
         "lat": "37.7755913",
@@ -10,7 +16,6 @@
         "display": 5,
         "data": 60
     },
-    "debug": false,
     "favorites": [{
         "route": "47",
         "stop": "5545",
