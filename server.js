@@ -41,7 +41,7 @@ const workflow = {
   },
 };
 
-workflow.doYourDoYourStuff();
+//workflow.doYourDoYourStuff();
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/index.html`));
