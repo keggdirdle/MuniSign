@@ -88,7 +88,7 @@ const _clear = function (configModel) {
 };
 
 const showError = function (err) {
-  console.log(err);
+  sign.send("error" + err);
 };
 
 const _formatAMPM = function (date) {
