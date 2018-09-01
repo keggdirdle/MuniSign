@@ -14,17 +14,17 @@ let weatherModel = {};
 
 const workflow = {
   doYourDoYourStuff() {
-    fs.appendFileSync(path.join(`${__dirname}/service.log`), "Stopping Timers\n");
+    fs.appendFileSync(path.join(`${__dirname}/service.log`), `${new Date()} + \n Stopping Timers\n`);
     DisplayFunctions.stopTimers();
-    fs.appendFileSync(path.join(`${__dirname}/service.log`), "Starting ShowLoading\n");
+    fs.appendFileSync(path.join(`${__dirname}/service.log`), `${new Date()} + \n Starting ShowLoading\n`);
     DisplayFunctions.showLoading(configModel, weatherModel);
-    fs.appendFileSync(path.join(`${__dirname}/service.log`), "Loading Config\n");
+    fs.appendFileSync(path.join(`${__dirname}/service.log`), `${new Date()} + \n Loading Config\n`);
     TransFunctions.loadConfig()
       .then(
         (resp) => {
           configModel = JSON.parse(resp);
           setTimeout(() => { 
-            fs.appendFileSync(path.join(`${__dirname}/service.log`), "Lets run it again!! \n");
+            fs.appendFileSync(path.join(`${__dirname}/service.log`), `${new Date()} + \n Lets run it again!! \n`);
             workflow.doYourDoYourStuff();
           }, configModel.cache.data * 1000);
           return Promise.all([

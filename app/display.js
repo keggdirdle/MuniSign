@@ -12,7 +12,7 @@ let timeHandle;
  * @param predictionModel This is the JSON response from the API call
  */
 const showPredictions = function (configModel, predictionModel, index = 0) {
-  fs.appendFileSync(path.join(`${__dirname}/../service.log`), `showPredicitons: \n`);
+  fs.appendFileSync(path.join(`${__dirname}/../service.log`), `${new Date()} + \n showPredicitons: \n`);
   const i = 0;
   let output = '';
   let output2 = '';
@@ -91,7 +91,7 @@ const _clear = function (configModel) {
 };
 
 const showError = function (err) {
-  fs.appendFileSync(path.join(`${__dirname}/../service.log`), `Error: ${err.message} \n`);
+  fs.appendFileSync(path.join(`${__dirname}/../service.log`), `${new Date()} + \n Error: ${err.message} \n`);
   sign.send("error" + err);
 };
 
