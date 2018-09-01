@@ -4,7 +4,7 @@ let child;
 const exec = require('child_process').exec;
 
 child = exec(script, (error, stdout, stderr) => {
-  send(`sign error: ${stdout}`);
+  console.log(`sign error: ${stdout}`);
 });
 
 send = function (string) {

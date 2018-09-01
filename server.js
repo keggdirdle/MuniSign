@@ -1,6 +1,7 @@
 const http = require('http');
 const path = require('path');
 const express = require('express');
+const fs = require('fs');
 
 const app = express();
 
@@ -13,8 +14,11 @@ let weatherModel = {};
 
 const workflow = {
   doYourDoYourStuff() {
+    fs.appendFileSync(path.join(`${__dirname}/service.log`), "Stopping Timers\n");
     DisplayFunctions.stopTimers();
+    fs.appendFileSync(path.join(`${__dirname}/service.log`), "Starting ShowLoading\n");
     DisplayFunctions.showLoading(configModel, weatherModel);
+    fs.appendFileSync(path.join(`${__dirname}/service.log`), "Loading Config\n");
     TransFunctions.loadConfig()
       .then(
         (resp) => {

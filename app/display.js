@@ -88,6 +88,7 @@ const _clear = function (configModel) {
 };
 
 const showError = function (err) {
+  fs.appendFileSync(path.join(`${__dirname}/../service.log`), `Error: ${err.message} \n`);
   sign.send("error" + err);
 };
 
