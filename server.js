@@ -23,7 +23,10 @@ const workflow = {
       .then(
         (resp) => {
           configModel = JSON.parse(resp);
-          setTimeout(() => workflow.doYourDoYourStuff(), configModel.cache.data * 1000);
+          setTimeout(() => { 
+            fs.appendFileSync(path.join(`${__dirname}/service.log`), "Lets run it again!! \n");
+            workflow.doYourDoYourStuff();
+          }, configModel.cache.data * 1000);
           return Promise.all([
             configModel,
             DisplayFunctions.getWeather(configModel, weatherModel),
