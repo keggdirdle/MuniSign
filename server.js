@@ -38,7 +38,7 @@ const workflow = {
         [, weatherModel, predicitonModel] = resp;
       })
       .then(() => {
-        DisplayFunctions.stopTimers();
+        //DisplayFunctions.stopTimers();
         try {
           DisplayFunctions.showPredictions(configModel, predicitonModel);
         } catch (e) {

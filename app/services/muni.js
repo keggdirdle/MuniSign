@@ -29,7 +29,7 @@ getAllStopsForAllRoutes = function (configModel, routeModel) {
 };
 
 getPredictions = function (configModel) {
-  fs.appendFileSync(path.join(`${__dirname}/../../service.log`), "${new Date()} + \n Getting Predicitons\n");
+  fs.appendFileSync(path.join(`${__dirname}/../../service.log`), `${new Date()} + \n Getting Predicitons\n`);
   return configModel.favorites.length === 0 ? getPredictionsForStopAndRoute(configModel) : getMutiplePredictionsForStopsAndRoutes(configModel);
 };
 

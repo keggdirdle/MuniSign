@@ -71,7 +71,7 @@ const showLoading = function (configModel, weatherModel) {
     } else {
       // _show(configModel, "Registering...");
       console.log(_center('Registering...'));
-      sign.send('Registering...');
+      sign.send(_center('Registering...'));
     }
   }, 0);
 };
