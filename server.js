@@ -44,6 +44,9 @@ const workflow = {
         } catch (e) {
           DisplayFunctions.showError(e);
         }
+      })
+      .catch((err) => {
+        fs.appendFileSync(path.join(`${__dirname}/service.log`), `${new Date()} + \n ERRRRRRR!! ${err.message} \n`);
       });
   },
 };
