@@ -1,7 +1,5 @@
 const sign = require('./sign.js');
 const weatherService = require('./services/weather');
-const fs = require('fs');
-const path = require('path');
 
 let dataHandle;
 let timeHandle;
@@ -12,7 +10,6 @@ let timeHandle;
  * @param predictionModel This is the JSON response from the API call
  */
 const showPredictions = function (configModel, predictionModel, index = 0) {
-  fs.appendFileSync(path.join(`${__dirname}/../service.log`), `${new Date()} + \n showPredicitons: \n`);
   const i = 0;
   let output = '';
   let output2 = '';
@@ -91,8 +88,7 @@ const _clear = function (configModel) {
 };
 
 const showError = function (err) {
-  fs.appendFileSync(path.join(`${__dirname}/../service.log`), `${new Date()} + \n Error: ${err.message} \n`);
-  sign.send("error" + err);
+  //sign.send("error" + err);
 };
 
 const _formatAMPM = function (date) {
