@@ -89,7 +89,7 @@ const _clear = function (configModel) {
 };
 
 const showError = function (err) {
-  sign.clear();
+  //sign.clear();
   sign.send(`${err}\n`);
 };
 
