@@ -29,7 +29,6 @@ getAllStopsForAllRoutes = function (configModel, routeModel) {
 };
 
 getPredictions = function (configModel) {
-  fs.appendFileSync(path.join(`${__dirname}/../../service.log`), `${new Date()} + \n Getting Predicitons\n`);
   return configModel.favorites.length === 0 ? getPredictionsForStopAndRoute(configModel) : getMutiplePredictionsForStopsAndRoutes(configModel);
 };
 
@@ -44,7 +43,6 @@ getMutiplePredictionsForStopsAndRoutes = function (configModel) {
   for (let i = 0; i < configModel.favorites.length; i++) {
     stops += `&stops=${configModel.favorites[i].route}|${configModel.favorites[i].stop}`;
   }
-  fs.appendFileSync(path.join(`${__dirname}/../../service.log`), `${new Date()} + \n ${configModel.domain}?command=predictionsForMultiStops&a=${configModel.agencyId}${stops}\n`);
   return Cache.get('predictionsForMultiStops', `${configModel.domain}?command=predictionsForMultiStops&a=${configModel.agencyId}${stops}`)
     .then(json => json.json())
     .then(json => json.predictions);
