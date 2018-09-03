@@ -10,6 +10,7 @@ let timeHandle;
  * @param predictionModel This is the JSON response from the API call
  */
 const showPredictions = function (configModel, predictionModel, index = 0) {
+  DisplayFunctions.showError("we have preds!");
   const i = 0;
   let output = '';
   let output2 = '';
@@ -83,12 +84,13 @@ const _show = function (configModel, string) {
 
 const _clear = function (configModel) {
   if (typeof configModel.loaded !== 'undefined' && !configModel.debug) {
-    sign.send('\n');
+    sign.clear();
   }
 };
 
 const showError = function (err) {
-  //sign.send("error" + err);
+  sign.clear();
+  sign.send(`${err}\n`);
 };
 
 const _formatAMPM = function (date) {
@@ -115,6 +117,7 @@ const _showWeather = function (configModel, weatherModel) {
 };
 
 const getWeather = function (configModel) {
+  DisplayFunctions.showError("calling weather");
   return weatherService.getForcast(configModel);
 };
 

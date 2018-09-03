@@ -7,8 +7,9 @@ while ! ping -c 1 -W 1 4.2.2.1; do
 done
 
 cd /home/pi/Muni/MuniSign/
+git checkout -- .
 git fetch --all
 git reset --hard origin/master
 npm cache clean --force
 npm install --no-progress
-node server
+sudo node server

@@ -9,11 +9,16 @@ const DisplayFunctions = require('./app/display');
 let configModel = {};
 let predicitonModel = {};
 let weatherModel = {};
+let i = 0;
 
 const workflow = {
   doYourDoYourStuff() {
+    i++;
+    DisplayFunctions.showError(i);
     DisplayFunctions.stopTimers();
+    DisplayFunctions.showError("show loading");
     DisplayFunctions.showLoading(configModel, weatherModel);
+    DisplayFunctions.showError("loading config");
     TransFunctions.loadConfig()
       .then(
         (resp) => {
@@ -32,8 +37,10 @@ const workflow = {
         [, weatherModel, predicitonModel] = resp;
       })
       .then(() => {
+        DisplayFunctions.showError("stopping 2nd timer");
         DisplayFunctions.stopTimers();
         try {
+          DisplayFunctions.showError("showing preds");
           DisplayFunctions.showPredictions(configModel, predicitonModel);
         } catch (e) {
           DisplayFunctions.stopTimers();
