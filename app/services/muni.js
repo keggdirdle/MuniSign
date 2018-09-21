@@ -4,11 +4,16 @@ const path = require('path');
 const Cache = require('../cache.js');
 
 const configFilePath = path.join(__dirname, '../../config.json');
+const DisplayFunctions = require('../display');
 
-loadConfig = function () {
+const loadConfig = () => {
   return new Promise((resolve, reject) => {
     fs.readFile(configFilePath, 'utf8', (err, contents) => {
-      err ? reject(err) : resolve(contents);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(contents);
+      }
     });
   });
 };
@@ -29,23 +34,31 @@ getAllStopsForAllRoutes = function (configModel, routeModel) {
 };
 
 getPredictions = function (configModel) {
+  //DisplayFunctions.showError("calling getMutiplePredictionsForStopsAndRoutes");
   return configModel.favorites.length === 0 ? getPredictionsForStopAndRoute(configModel) : getMutiplePredictionsForStopsAndRoutes(configModel);
 };
 
 getPredictionsForStopAndRoute = function (configModel) {
-  return Cache.get('predictions', `${configModel.domain}?command=predictions&a=${configModel.agencyId}&s=${configModel.favorites.stop}&r=${configModel.favorites.route}`)
+  return Cache.get(configModel, 'predictions', `${configModel.domain}?command=predictions&a=${configModel.agencyId}&s=${configModel.favorites.stop}&r=${configModel.favorites.route}`)
     .then(json => json.json())
     .then(json => json.predictions);
 };
 
 getMutiplePredictionsForStopsAndRoutes = function (configModel) {
-  let stops = '';
-  for (let i = 0; i < configModel.favorites.length; i++) {
-    stops += `&stops=${configModel.favorites[i].route}|${configModel.favorites[i].stop}`;
-  }
-  return Cache.get('predictionsForMultiStops', `${configModel.domain}?command=predictionsForMultiStops&a=${configModel.agencyId}${stops}`)
-    .then(json => json.json())
-    .then(json => json.predictions);
+  return new Promise((resolve, reject) => {
+    let stops = '';
+    for (let i = 0; i < configModel.favorites.length; i++) {
+      stops += `&stops=${configModel.favorites[i].route}|${configModel.favorites[i].stop}`;
+    }
+    //DisplayFunctions.showError("getting from cache for stops" + stops);
+    return Cache.get(configModel,'predictionsForMultiStops', `${configModel.domain}?command=predictionsForMultiStops&a=${configModel.agencyId}${stops}`)
+    .then((json) => {
+      return resolve(JSON.parse(json).predictions);
+    })
+    .catch((err) => {
+      return reject(err);
+    });
+  });
 };
 
 sendResponse = function (response) {

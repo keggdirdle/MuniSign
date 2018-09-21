@@ -11,8 +11,12 @@
   "author": "Ken Eldridge",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "express": "^4.16.3",
-    "node-fetch": "^2.2.0"
+    "forever-agent": "^0.6.1",
+    "log4js": "^3.0.5",
+    "node-fetch": "^2.2.0",
+    "request": "^2.88.0"
   },
   "devDependencies": {
     "eslint": "^5.4.0",

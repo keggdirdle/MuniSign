@@ -1,5 +1,15 @@
 const sign = require('./sign.js');
 const weatherService = require('./services/weather');
+const fs = require('fs');
+const ip = require('ip');
+
+// const log4js = require('log4js');
+// const now = new Date();
+// log4js.configure({
+//   appenders: { muni: { type: 'file', filename: `server-${now.getMilliseconds()}.log` } },
+//   categories: { default: { appenders: ['muni'], level: 'debug' } }
+// });
+// const logger = log4js.getLogger();
 
 let dataHandle;
 let timeHandle;
@@ -10,11 +20,12 @@ let timeHandle;
  * @param predictionModel This is the JSON response from the API call
  */
 const showPredictions = function (configModel, predictionModel, index = 0) {
-  DisplayFunctions.showError("we have preds!");
+  //showError("in show Preds");
   const i = 0;
   let output = '';
   let output2 = '';
   if (_hasPredictions(predictionModel, index)) {
+    //logger.info(`building output for the ${index}th time`);
     output += `${predictionModel[index].routeTitle}`;
     if (predictionModel[index].direction[0]) {
       if (predictionModel[index].direction[0].prediction[0]) {
@@ -42,8 +53,8 @@ const showPredictions = function (configModel, predictionModel, index = 0) {
   if (output !== '') {
     dataHandle = setTimeout(() => {
       _clear(configModel);
-      _show(configModel, output);
-      _show(configModel, output2);
+      show(configModel, output);
+      show(configModel, output2);
       index === predictionModel.length - 1 ? index = 0 : index++;
       showPredictions(configModel, predictionModel, index);
     }, configModel.cache.display * 1000);
@@ -55,26 +66,26 @@ const showPredictions = function (configModel, predictionModel, index = 0) {
   }
 };
 
+const writeFile = function(str) {
+	fs.appendFile('sign.log', str + "\n", (err) => {});
+}
+
 const _hasPredictions = function (predictionModel, index) {
   return predictionModel[index].direction;
 };
 
-const showLoading = function (configModel, weatherModel) {
-  timeHandle = setTimeout(() => {
-    if (configModel.loaded && weatherModel.length) {
-      const d = new Date();
-      const time = _formatAMPM(d);
-      _show(configModel, time);
-      _showWeather(configModel, weatherModel);
-    } else {
-      // _show(configModel, "Registering...");
-      console.log(_center('Registering...'));
-      sign.send(_center('Registering...'));
-    }
-  }, 0);
+const showLoading = (configModel) => {
+  const d = new Date();
+  const time = _formatAMPM(d);
+  show(configModel, _center(time));
+}
+
+const showInit = function () {
+  sign.send(_center('Registering...'));
+  sign.send(_center(ip.address()));
 };
 
-const _show = function (configModel, string) {
+const show = function (configModel, string) {
   if (typeof configModel.loaded === 'undefined' || configModel.debug) {
     console.log(_center(string));
   } else {
@@ -89,8 +100,9 @@ const _clear = function (configModel) {
 };
 
 const showError = function (err) {
-  //sign.clear();
-  sign.send(`${err}\n`);
+  console.log(err);
+  //writeFile(err);
+  sign.send(err);
 };
 
 const _formatAMPM = function (date) {
@@ -112,12 +124,12 @@ const stopTimers = function () {
 const _showWeather = function (configModel, weatherModel) {
   if (weatherModel.length) {
     const display = `Temp: ${Math.ceil(weatherModel[0].main.temp)} ${weatherModel[0].weather[0].main}`;
-    _show(configModel, display);
+    show(configModel, display);
   }
 };
 
 const getWeather = function (configModel) {
-  DisplayFunctions.showError("calling weather");
+  //showError("calling weather");
   return weatherService.getForcast(configModel);
 };
 
@@ -137,6 +149,8 @@ module.exports = {
   showPredictions,
   stopTimers,
   showError,
-  showLoading,
   getWeather,
+  show,
+  showLoading,
+  showInit
 };
