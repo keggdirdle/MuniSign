@@ -11,8 +11,7 @@ const ip = require('ip');
 // });
 // const logger = log4js.getLogger();
 
-let dataHandle;
-let timeHandle;
+let displayHandle;
 
 /**
  * Displays the schedule for the selected routes and stops
@@ -20,67 +19,105 @@ let timeHandle;
  * @param predictionModel This is the JSON response from the API call
  */
 const showPredictions = function (configModel, predictionModel, index = 0) {
-  //showError("in show Preds");
-  const i = 0;
-  let output = '';
-  let output2 = '';
-  if (_hasPredictions(predictionModel, index)) {
-    //logger.info(`building output for the ${index}th time`);
-    output += `${predictionModel[index].routeTitle}`;
-    if (predictionModel[index].direction[0]) {
-      if (predictionModel[index].direction[0].prediction[0]) {
-        output2 += `${_isArriving(predictionModel[index].direction[0].prediction[0].minutes)}`;
-      } else if (predictionModel[index].direction[0].prediction) {
-        output2 += `${_isArriving(predictionModel[index].direction[0].prediction.minutes)}`;
-      }
+  return new Promise((resolve, reject) => {  
+      try { 
+        //showError("in show Preds");
+        const i = 0;
+        let output = '';
+        let output2 = '';
+        if (_hasPredictions(predictionModel, index)) {
+          
+            //logger.info(`building output for the ${index}th time`);
+            const currentPrediction = predictionModel[index];
+            const currentDirection = _getDirection(configModel, currentPrediction.stopTag)
+            output += `${currentPrediction.routeTitle} ${currentDirection}`;
+            if (currentPrediction.direction[0]) {
+              if (currentPrediction.direction[0].prediction[0]) {
+                output2 += `${_isArriving(currentPrediction.direction[0].prediction[0].minutes)}`;
+              } else if (currentPrediction.direction[0].prediction) {
+                output2 += `${_isArriving(currentPrediction.direction[0].prediction.minutes)}`;
+              }
 
-      if (predictionModel[index].direction[0].prediction[1]) {
-        output2 += ` & ${predictionModel[index].direction[0].prediction[1].minutes} min`;
-      }
-    } else {
+              if (currentPrediction.direction[0].prediction[1]) {
+                output2 += ` & ${currentPrediction.direction[0].prediction[1].minutes} min`;
+              }
+            } else {
 
-      if (predictionModel[index].direction.prediction[0]) {
-        output2 += `${_isArriving(predictionModel[index].direction.prediction[0].minutes)}`;
-      } else if (predictionModel[index].direction.prediction) {
-        output2 += `${_isArriving(predictionModel[index].direction.prediction.minutes)}`;
-      }
+              if (currentPrediction.direction.prediction[0]) {
+                output2 += `${_isArriving(currentPrediction.direction.prediction[0].minutes)}`;
+              } else if (currentPrediction.direction.prediction) {
+                output2 += `${_isArriving(currentPrediction.direction.prediction.minutes)}`;
+              }
 
-      if (predictionModel[index].direction.prediction[1]) {
-        output2 += ` & ${predictionModel[index].direction.prediction[1].minutes} min`;
+              if (currentPrediction.direction.prediction[1]) {
+                output2 += ` & ${currentPrediction.direction.prediction[1].minutes} min`;
+              }
+            }
+        }
+        if (output !== '') {
+          displayHandle = setTimeout(() => {
+            clear(configModel);
+            show(configModel, output);
+            show(configModel, output2);
+            index === predictionModel.length - 1 ? index = 0 : index++;
+            //we're at the end of the loop, go back to the beginning
+          showPredictions(configModel, predictionModel, index);
+          }, configModel.cache.display * 1000);
+        } else {
+          displayHandle = setTimeout(() => {
+            index === predictionModel.length - 1 ? index = 0 : index++;
+            //no predictions for that route, get the next one
+          showPredictions(configModel, predictionModel, index);
+          }, 10);
+        }
+        return resolve();
+      } catch (error) {
+        return reject (error);
       }
-    }
-  }
-  if (output !== '') {
-    dataHandle = setTimeout(() => {
-      _clear(configModel);
-      show(configModel, output);
-      show(configModel, output2);
-      index === predictionModel.length - 1 ? index = 0 : index++;
-      showPredictions(configModel, predictionModel, index);
-    }, configModel.cache.display * 1000);
-  } else {
-    dataHandle = setTimeout(() => {
-      index === predictionModel.length - 1 ? index = 0 : index++;
-      showPredictions(configModel, predictionModel, index);
-    }, 10);
-  }
+      //console.log("showPredictions()")
+  });
 };
 
-const writeFile = function(str) {
-	fs.appendFile('sign.log', str + "\n", (err) => {});
+const _getDirection = function (configModel, stopTag) {
+    const direction = configModel.favorites.find(stop => stop.stop === stopTag).direction;
+    return direction === "N" ? "\u00C0" 
+        : direction === "NE" ? "\u00C1"
+        : direction === "E" ? "\u00C2"
+        : direction === "SE" ? "\u00C3"
+        : direction === "S" ? "\u00C4"
+        : direction === "SW" ? "\u00C5"
+        : direction === "W" ? "\u00C6"
+        : direction === "NW" ? "\u00C7" : ""
 }
 
 const _hasPredictions = function (predictionModel, index) {
   return predictionModel[index].direction;
 };
 
-const showLoading = (configModel) => {
+const showLoading = (configModel, weatherModel) => {
+  let infoDisplayLine1 = "";
+  let infoDisplayLine2 = "";
+  let sky = "";
+
   const d = new Date();
-  const time = _formatAMPM(d);
-  show(configModel, _center(time));
+  infoDisplayLine1 = _formatAMPM(d);
+  const options = { weekday: 'short', year: '2-digit', month: '2-digit', day: 'numeric' };
+
+  if (weatherModel) {
+    const minTemp = weatherService.getMinTemp(weatherModel);
+    const maxTemp = weatherService.getMaxTemp(weatherModel);
+    sky = weatherService.getSky(weatherModel);
+    infoDisplayLine1 += ` ${maxTemp}/${minTemp}`;
+  }
+
+  infoDisplayLine2 = `${d.toLocaleDateString("en-US", options).replace(",","")} ${sky}`;
+
+  show(configModel, _center(infoDisplayLine1));
+  show(configModel, _center(infoDisplayLine2));
 }
 
 const showInit = function () {
+  console.log(4);
   sign.send(_center('Registering...'));
   sign.send(_center(ip.address()));
 };
@@ -93,11 +130,12 @@ const show = function (configModel, string) {
   }
 };
 
-const _clear = function (configModel) {
+const clear = function (configModel) {
   if (typeof configModel.loaded !== 'undefined' && !configModel.debug) {
     sign.clear();
   }
 };
+
 
 const showError = function (err) {
   console.log(err);
@@ -116,41 +154,62 @@ const _formatAMPM = function (date) {
   return strTime;
 };
 
-const stopTimers = function () {
+const stopTimers = function (dataHandle) {
   clearTimeout(dataHandle);
-  clearTimeout(timeHandle);
-};
-
-const _showWeather = function (configModel, weatherModel) {
-  if (weatherModel.length) {
-    const display = `Temp: ${Math.ceil(weatherModel[0].main.temp)} ${weatherModel[0].weather[0].main}`;
-    show(configModel, display);
-  }
-};
-
-const getWeather = function (configModel) {
-  //showError("calling weather");
-  return weatherService.getForcast(configModel);
+  clearTimeout(displayHandle);
 };
 
 const _isArriving = function (minutes) {
   return minutes === '0' ? 'Arriving' : `${minutes} min`;
 };
 
+const kill = function() {
+  sign.kill();
+}
+
 const _center = function (string, charLength = 20) {
-  const spaceToFill = charLength - string.length;
-  const paddingSize = parseInt(Math.floor(spaceToFill / 2));
-  const paddingChar = ' ';
-  const sidePadding = paddingChar.repeat(paddingSize);
+  let sidePadding = "";
+  if (string.length < 20) {
+    //console.log(string);
+    const spaceToFill = charLength - string.length;
+    const paddingSize = parseInt(Math.floor(spaceToFill / 2));
+    const paddingChar = ' ';
+    sidePadding = paddingChar.repeat(paddingSize);
+  }
   return `${sidePadding}${string}${sidePadding}`;
 };
+
+const showShareCarEstimate = (lyftModel, uberModel) => {
+  //console.log(lyftModel);
+  if (lyftModel) {
+    const estimate = Math.ceil(lyftModel.find(a => a.ride_type === "lyft").estimated_duration_seconds / 60);
+    const liftLow = lyftModel.find(a => a.ride_type === "lyft").estimated_cost_cents_min / 100;
+    const liftHigh = lyftModel.find(a => a.ride_type === "lyft").estimated_cost_cents_max / 100;
+    const liftLineLow = lyftModel.find(a => a.ride_type === "lyft_line").estimated_cost_cents_min / 100;
+    const liftLineHigh = lyftModel.find(a => a.ride_type === "lyft_line").estimated_cost_cents_max / 100;
+    sign.send(_center(`Lyft/Line ${estimate}min`));
+    sign.send(_center(`$${liftLow}-${liftHigh} / $${liftLineLow}-${liftLineHigh}`));
+  }
+
+  if (uberModel) {
+    const estimate = Math.ceil(uberModel.find(a => a.display_name === "UberX").duration / 60);
+    const uberLow = uberModel.find(a => a.display_name === "UberX").low_estimate;
+    const uberHigh = uberModel.find(a => a.display_name === "UberX").high_estimate;
+    const uberPoolLow = uberModel.find(a => a.display_name === "UberPool").low_estimate;
+    const uberPoolHigh = uberModel.find(a => a.display_name === "UberPool").high_estimate;
+    sign.send(_center(`UberX/Pool ${estimate}min`));
+    sign.send(_center(`$${uberLow}-${uberHigh} / $${uberPoolLow}-${uberPoolHigh}`));
+  }
+}
 
 module.exports = {
   showPredictions,
   stopTimers,
   showError,
-  getWeather,
   show,
   showLoading,
-  showInit
+  showInit,
+  showShareCarEstimate,
+  clear,
+  kill
 };

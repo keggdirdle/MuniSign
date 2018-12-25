@@ -15,7 +15,6 @@
     "express": "^4.16.3",
     "forever-agent": "^0.6.1",
     "log4js": "^3.0.5",
-    "node-fetch": "^2.2.0",
     "request": "^2.88.0"
   },
   "devDependencies": {

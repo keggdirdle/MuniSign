@@ -1,22 +1,5 @@
-
-const fs = require('fs');
-const path = require('path');
 const Cache = require('../cache.js');
-
-const configFilePath = path.join(__dirname, '../../config.json');
 const DisplayFunctions = require('../display');
-
-const loadConfig = () => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(configFilePath, 'utf8', (err, contents) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(contents);
-      }
-    });
-  });
-};
 
 debug = function () {
   console.log(JSON.parse(configModel).agencyID);
@@ -38,27 +21,26 @@ getPredictions = function (configModel) {
   return configModel.favorites.length === 0 ? getPredictionsForStopAndRoute(configModel) : getMutiplePredictionsForStopsAndRoutes(configModel);
 };
 
-getPredictionsForStopAndRoute = function (configModel) {
-  return Cache.get(configModel, 'predictions', `${configModel.domain}?command=predictions&a=${configModel.agencyId}&s=${configModel.favorites.stop}&r=${configModel.favorites.route}`)
-    .then(json => json.json())
+getPredictionsForStopAndRoute = async (configModel) => {
+  return await Cache.get(configModel, 'predictions', `${configModel.domain}?command=predictions&a=${configModel.agencyId}&s=${configModel.favorites.stop}&r=${configModel.favorites.route}`)
     .then(json => json.predictions);
 };
 
-getMutiplePredictionsForStopsAndRoutes = function (configModel) {
-  return new Promise((resolve, reject) => {
+getMutiplePredictionsForStopsAndRoutes = async (configModel) => {
+  //return new Promise((resolve, reject) => {
     let stops = '';
     for (let i = 0; i < configModel.favorites.length; i++) {
       stops += `&stops=${configModel.favorites[i].route}|${configModel.favorites[i].stop}`;
     }
     //DisplayFunctions.showError("getting from cache for stops" + stops);
-    return Cache.get(configModel,'predictionsForMultiStops', `${configModel.domain}?command=predictionsForMultiStops&a=${configModel.agencyId}${stops}`)
+    return await Cache.get(configModel,'predictionsForMultiStops', `${configModel.domain}?command=predictionsForMultiStops&a=${configModel.agencyId}${stops}`)
     .then((json) => {
-      return resolve(JSON.parse(json).predictions);
-    })
-    .catch((err) => {
-      return reject(err);
+      return json.predictions;
     });
-  });
+    //.catch((err) => {
+      //return reject(err);
+    //});
+  //});
 };
 
 sendResponse = function (response) {
@@ -75,6 +57,5 @@ sendResponse = function (response) {
 // }
 
 module.exports = {
-  loadConfig,
   getPredictions,
 };
