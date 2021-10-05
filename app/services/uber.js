@@ -12,13 +12,9 @@ log4js.configure({
 const logger = log4js.getLogger();
 
 getCostEstimate = async (configModel) => {
-    //logger.debug("making the uber call...");
-    try {
-        return await Cache.get(configModel, 'uber', configModel.uber.url,`Token ${configModel.uber.apiKey}`)
-        .then(json => json.prices)
-    } catch (error) {
-        logger.error(error);
-    }
+    return await Cache.get(configModel, 'uber', configModel.uber.url,`Token ${configModel.uber.apiKey}`)
+    .then(json => json.prices)
+    .catch((err) =>  { throw new Error(err) })
 }
 
 module.exports = {

@@ -61,6 +61,7 @@ var maxRequest = request.defaults({
 // }
 
 const get = (configModel, key, uri, auth) => {
+  //logger.debug('getting URL', uri);
   return new Promise((resolve, reject) => {
     maxRequest.get(
       { 
@@ -73,18 +74,14 @@ const get = (configModel, key, uri, auth) => {
     if (!error && response.statusCode == 200) { 
       return resolve(JSON.parse(response.body));      
       } else {
-            logger.error(`1`); 
-            logger.error(error.stack);
-            logger.error(error.message);
-        return res.end();
+        //response.end()
+        return reject(error);
     }
     }).on('end', function() {
-        return;
+      return;
     }).on('error', function(error){
-        logger.debug(`2`);
-        logger.error(error.stack);
-        logger.error(error.message);
-        return reject(error);
+      //response.end();
+      return reject(error);
     }).end();
   })
 };

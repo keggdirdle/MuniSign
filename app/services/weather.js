@@ -5,6 +5,7 @@ const Cache = require('../cache.js');
 const getForcast = async (configModel) => {
   return await Cache.get(configModel, 'forcast', `${configModel.weather.url}`)
   .then(json => json.list)
+  .catch((err) =>  { throw new Error(err) })
   // return new Promise((resolve, reject) => {
   //   //ConfigService.loadConfig()
   //   //.then((configModel) => {

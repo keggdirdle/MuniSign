@@ -1,5 +1,12 @@
 const Cache = require('../cache.js');
 const DisplayFunctions = require('../display');
+const log4js = require('log4js');
+
+log4js.configure({
+  appenders: { muni: { type: 'file', filename: `./logs/muni.log` } },
+  categories: { default: { appenders: ['muni'], level: 'debug' } }
+});
+const logger = log4js.getLogger();
 
 debug = function () {
   console.log(JSON.parse(configModel).agencyID);
@@ -23,10 +30,12 @@ getPredictions = function (configModel) {
 
 getPredictionsForStopAndRoute = async (configModel) => {
   return await Cache.get(configModel, 'predictions', `${configModel.domain}?command=predictions&a=${configModel.agencyId}&s=${configModel.favorites.stop}&r=${configModel.favorites.route}`)
-    .then(json => json.predictions);
+    .then(json => json.predictions)
+    .catch((err) =>  { throw new Error(err) })
 };
 
 getMutiplePredictionsForStopsAndRoutes = async (configModel) => {
+ // logger.debug('running 1');
   //return new Promise((resolve, reject) => {
     let stops = '';
     for (let i = 0; i < configModel.favorites.length; i++) {
@@ -35,8 +44,11 @@ getMutiplePredictionsForStopsAndRoutes = async (configModel) => {
     //DisplayFunctions.showError("getting from cache for stops" + stops);
     return await Cache.get(configModel,'predictionsForMultiStops', `${configModel.domain}?command=predictionsForMultiStops&a=${configModel.agencyId}${stops}`)
     .then((json) => {
+      //logger.debug('running 2', json);
+      DisplayFunctions
       return json.predictions;
-    });
+    })
+    .catch((err) =>  { throw new Error(err) })
     //.catch((err) => {
       //return reject(err);
     //});

@@ -72,6 +72,7 @@ const showPredictions = function (configModel, predictionModel, index = 0) {
         }
         return resolve();
       } catch (error) {
+        console.log(`ERROR: ${error}`)
         return reject (error);
       }
       //console.log("showPredictions()")
@@ -91,33 +92,35 @@ const _getDirection = function (configModel, stopTag) {
 }
 
 const _hasPredictions = function (predictionModel, index) {
-  return predictionModel[index].direction;
+
+  return predictionModel && predictionModel[index] ? predictionModel[index].direction : false;
 };
 
-const showLoading = (configModel, weatherModel) => {
+const showDateTime = (configModel) => {
+  const d = new Date();
+  const options = { weekday: 'long', year: '2-digit', month: '2-digit', day: 'numeric' };
+  show(configModel, _center(_formatAMPM(d)))
+  show(configModel, _center(`${d.toLocaleDateString("en-US", options).replace(",","")}`));
+}
+
+const showWeather = (configModel, weatherModel) => {
   let infoDisplayLine1 = "";
   let infoDisplayLine2 = "";
   let sky = "";
 
-  const d = new Date();
-  infoDisplayLine1 = _formatAMPM(d);
-  const options = { weekday: 'short', year: '2-digit', month: '2-digit', day: 'numeric' };
-
   if (weatherModel) {
     const minTemp = weatherService.getMinTemp(weatherModel);
     const maxTemp = weatherService.getMaxTemp(weatherModel);
-    sky = weatherService.getSky(weatherModel);
-    infoDisplayLine1 += ` ${maxTemp}/${minTemp}`;
+    sky = `Forecast: ${weatherService.getSky(weatherModel)}`;
+    infoDisplayLine1 += `High:${maxTemp}  Low:${minTemp}`;
   }
 
-  infoDisplayLine2 = `${d.toLocaleDateString("en-US", options).replace(",","")} ${sky}`;
-
   show(configModel, _center(infoDisplayLine1));
-  show(configModel, _center(infoDisplayLine2));
+  show(configModel, _center(sky));
 }
 
 const showInit = function () {
-  console.log(4);
+  //console.log(4);
   sign.send(_center('Registering...'));
   sign.send(_center(ip.address()));
 };
@@ -207,7 +210,8 @@ module.exports = {
   stopTimers,
   showError,
   show,
-  showLoading,
+  showDateTime,
+  showWeather,
   showInit,
   showShareCarEstimate,
   clear,

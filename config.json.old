@@ -20,37 +20,67 @@ const configModel =
         lat: "37.7755913",
         lng: "-122.4169554"
     },
-    domain: "http://retro.umoiq.com/service/publicJSONFeed",
+    domain: "http://webservices.nextbus.com/service/publicJSONFeed",
     googleAPIKey: api.keys.googleApi,
     cache: {
         display: 3,
         data: 60,
         timeout: 2500
     },
-    favorites: [
-    {
-        route: "49",
-        stop: "6817",
-        stopTitle: "Van Ness Station Inbound",
+    favorites: [{
+        route: "47",
+        stop: "5545",
+        stopTitle: "Mission St & 11th St",
         direction: "N"
     },
     {
-        route: "9",
-        stop: "3243",
-        stopTitle: "Van Ness Station Outbound",
-        direction: "S"
+        route: "F",
+        stop: "5652",
+        stopTitle: "Market St & 9th St - Inbound",
+        direction: "NE"
+    },
+    {
+        route: "76X",
+        stop: "6833",
+        direction: "N"
+    },
+    {
+        route: "90",
+        stop: "5545",
+        direction: "N"
     },
     {
         route: "14",
-        stop: "5545",
-        stopTitle: "Mission St & 11th",
+        stop: "5544",
+        direction: "NE"
+    },
+    {
+        route: "N",
+        stop: "5419",
+        stopTitle: "Van Ness Station Inbound",
+        direction: "NE"
+    },
+    {
+        route: "N",
+        stop: "6996",
+        stopTitle: "Van Ness Station Outbound",
         direction: "SW"
     },
     {
-        route: "44",
-        stop: "5041",
-        stopTitle: "Van Ness Outbound",
+        route: "J",
+        stop: "6996",
+        stopTitle: "Van Ness Station Outbound",
         direction: "SW"
+    },
+    {
+        route: "N_OWL",
+        stop: "5696",
+        direction: "W"
+    },{
+        route: "21",
+        stop: "6501",
+        stopTitle: "Market St & 9th St",
+        direction: "W"
     }]
 }
 
